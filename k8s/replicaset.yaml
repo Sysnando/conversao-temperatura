@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: meureplicaset
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: conversao-temp-web
+  template:
+    metadata:
+      labels: 
+        app: conversao-temp-web
+    spec: 
+      containers:
+        - name: conversao-temp-web
+          image: sysfel/conversao-temperatura:v2
+          ports:
+            - containerPort: 8081
+
+---
+
+# Service conversao-temp-web
+apiVersion: v1
+kind: Service
+metadata: 
+  name: conversao-temp-web
+spec: 
+  selector: 
+    app: conversao-temp-web
+  ports: 
+  - port: 81
+    targetPort: 8081 # porta alvo
+    nodePort: 31000
+  type: NodePort
